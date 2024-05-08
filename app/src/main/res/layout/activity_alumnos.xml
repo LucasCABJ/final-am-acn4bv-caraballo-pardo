@@ -42,78 +42,49 @@
                 android:layout_marginBottom="30dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="30dp"
-                android:paddingTop="30dp"
-                android:paddingRight="30dp">
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp">
 
                 <LinearLayout
-                    android:id="@+id/CardAlumnos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:contentDescription="@string/alumnos_card_image_description"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/alumnos"
-                        tools:srcCompat="@drawable/alumnos" />
+                        android:id="@+id/imageView2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:maxHeight="5dp"
+                        tools:srcCompat="@tools:sample/avatars" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/light"
-                        android:padding="15dp"
-                        android:text="@string/alumnos_card_text_label" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Lucas Caraballo" />
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Curso: 5to Año" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Edad: 18" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/CardCursos"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:contentDescription="@string/cursos_card_image_description"
-                        android:scaleType="center"
-                        app:srcCompat="@drawable/istockphoto_1415740411_612x612"
-                        tools:srcCompat="@drawable/istockphoto_1415740411_612x612" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/light"
-                        android:padding="15dp"
-                        android:text="@string/cursos_card_text_label" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/CardPersonalDocente"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:contentDescription="@string/personal_docente_card_image_description"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/teacher"
-                        tools:srcCompat="@drawable/teacher" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/light"
-                        android:padding="15dp"
-                        android:text="@string/personal_docente_card_text_label" />
-                </LinearLayout>
             </LinearLayout>
 
         </ScrollView>
