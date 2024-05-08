@@ -7,4 +7,7 @@
     <string name="cursos_card_image_description">Imagen de cursos</string>
     <string name="personal_docente_card_image_description">Imagen de personal docente</string>
     <string name="nav_logo_description">Logo de la institución educativa</string>
+    <string name="alumno_test_name">John Doe</string>
+    <string name="alumno_test_curso">Curso: Lorem Ipsum</string>
+    <string name="alumno_test_age">Edad: 50</string>
 </resources>
