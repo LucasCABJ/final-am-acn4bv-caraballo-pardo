@@ -8,6 +8,7 @@
     tools:context=".AlumnosActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -22,11 +23,13 @@
 
             <ImageView
                 android:id="@+id/SchoolNavLogo"
-                android:onClick="goToMainView"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:layout_gravity="bottom|end"
                 android:contentDescription="@string/nav_logo_description"
+                android:onClick="goToMainView"
                 app:srcCompat="@drawable/logoescuela"
+                tools:layout_gravity="bottom|end"
                 tools:srcCompat="@drawable/ic_launcher_foreground" />
 
         </LinearLayout>
@@ -63,4 +66,5 @@
         </ScrollView>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
