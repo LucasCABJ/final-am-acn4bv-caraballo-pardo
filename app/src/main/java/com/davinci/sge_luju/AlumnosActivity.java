@@ -146,9 +146,4 @@ public class AlumnosActivity extends AppCompatActivity {
         LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
         alumnosContainer.addView(alumnoRow);
     }
-
-    public void goToMainView(View view) {
-        Intent nextView = new Intent(this, MainActivity.class);
-        startActivity(nextView);
-    }
 }

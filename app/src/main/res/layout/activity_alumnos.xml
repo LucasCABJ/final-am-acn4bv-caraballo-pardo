@@ -11,7 +11,10 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-26dp">
 
         <LinearLayout
             android:id="@+id/MainNav"
@@ -26,11 +29,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom|end"
+                android:layout_marginBottom="5dp"
                 android:contentDescription="@string/nav_logo_description"
-                android:onClick="goToMainView"
                 app:srcCompat="@drawable/logoescuela"
                 tools:layout_gravity="bottom|end"
                 tools:srcCompat="@drawable/ic_launcher_foreground" />
+
+            <Button
+                android:id="@+id/crearAlumnoDePruebaBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="agregarAlumnoPrueba"
+                android:text="@string/alumnodepruebaBtn_text" />
 
         </LinearLayout>
 
