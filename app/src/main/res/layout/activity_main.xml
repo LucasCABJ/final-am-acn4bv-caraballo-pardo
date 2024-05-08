@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
-                android:background="@color/white"
+                android:background="@color/primary"
                 android:orientation="vertical"
                 android:paddingLeft="30dp"
                 android:paddingTop="30dp"
@@ -66,6 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/light"
+                        android:textColor="@color/dark"
                         android:padding="15dp"
                         android:text="@string/alumnos_card_text_label" />
                 </LinearLayout>
@@ -89,6 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/light"
+                        android:textColor="@color/dark"
                         android:padding="15dp"
                         android:text="@string/cursos_card_text_label" />
                 </LinearLayout>
@@ -112,6 +114,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/light"
+                        android:textColor="@color/dark"
                         android:padding="15dp"
                         android:text="@string/personal_docente_card_text_label" />
                 </LinearLayout>
