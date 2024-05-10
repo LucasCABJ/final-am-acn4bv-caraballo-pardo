@@ -1,8 +1,7 @@
 package com.davinci.sge_luju.model;
 
-import android.os.Build;
-
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Alumno {
   // TODO: Definir atributos de la clase Alumno
@@ -19,10 +18,11 @@ public class Alumno {
   private String curso;
   private int id;
 
-  public Alumno(String nombre, String apellido, String email, String telefono) {
+  public Alumno(String nombre, String apellido, String email) {
     setNombre(nombre);
     setApellido(apellido);
     setEmail(email);
+    getEdadHardcodeada();
     setCurso("Desarrollo de Aplicaciones Moviles");
     setFoto("R.drawable.logoescuela"); // <- IMG hardcodeada
   }
@@ -52,6 +52,10 @@ public class Alumno {
     this.curso = curso;
   }
 
+  public String getFoto() {
+    return foto;
+  }
+
   private void setFoto(String s) {
     this.foto = s;
   }
@@ -61,15 +65,19 @@ public class Alumno {
   }
 
 
-  private String getFullName() {
+  public String getFullName() {
     return getNombre() + " " + getApellido();
   }
 
-  private int calculateAge() {
-    // TODO: Elevar el API a 26 ?
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // <- Sugerencia del IDE
-      return LocalDate.now().getYear() - fechaNacimiento.getYear();
+  public int calcularEdad() {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      Period periodo = Period.between(fechaNacimiento, LocalDate.now());
+      return periodo.getYears();
     }
     return 20;
+  }
+
+  public int getEdadHardcodeada() {
+    return (int) ((Math.random()*10) + 20);
   }
 }
