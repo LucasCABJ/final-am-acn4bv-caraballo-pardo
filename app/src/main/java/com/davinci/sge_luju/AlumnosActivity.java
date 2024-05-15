@@ -101,7 +101,7 @@ public class AlumnosActivity extends AppCompatActivity {
     // Creo edad del alumno
     TextView alumnoAge = new TextView(this);
     alumnoAge.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    alumnoAge.setText(alumno.calcularEdad());
+    alumnoAge.setText("Edad: "+alumno.getEdadHardcodeada());
 
     // Agrego edad a layout de data del alumno
     alumnoRowDataLayout.addView(alumnoAge);
