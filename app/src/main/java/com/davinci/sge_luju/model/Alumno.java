@@ -69,13 +69,13 @@ public class Alumno {
     return getNombre() + " " + getApellido();
   }
 
-  public int calcularEdad() {
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-      Period periodo = Period.between(fechaNacimiento, LocalDate.now());
-      return periodo.getYears();
-    }
-    return 20;
-  }
+//  public int calcularEdad() {
+//    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//      Period periodo = Period.between(fechaNacimiento, LocalDate.now());
+//      return periodo.getYears();
+//    }
+//    return 20;
+//  }
 
   public int getEdadHardcodeada() {
     return (int) ((Math.random()*10) + 20);
