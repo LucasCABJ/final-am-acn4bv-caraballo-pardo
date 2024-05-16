@@ -101,7 +101,7 @@ public class AlumnosActivity extends AppCompatActivity {
     // Creo edad del alumno
     TextView alumnoAge = new TextView(this);
     alumnoAge.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    alumnoAge.setText("Edad: "+alumno.getEdadHardcodeada());
+    alumnoAge.setText(String.format(getString(R.string.edad_alumno), alumno.getEdadHardcodeada())); // formateado según strings.xml (recomendación del linter)
 
     // Agrego edad a layout de data del alumno
     alumnoRowDataLayout.addView(alumnoAge);
@@ -116,7 +116,11 @@ public class AlumnosActivity extends AppCompatActivity {
   }
 
   public void agregarAlumnoPrueba(View view) {
-    Alumno alumno = new Alumno("Prueba", "Prueba", "prueba@example.com");
+    String[] apellidos = {"Perez", "González", "Rodríguez", "Martínez", "Sánchez", "López", "Fernández", "Díaz", "Torres", "Ruiz"};
+    String[] nombres = {"Juan", "María", "Carlos", "Laura", "Pedro", "Ana", "Sofía", "Diego", "Elena", "Pablo"};
+    String nombre = nombres[(int) (Math.random() * nombres.length)];
+    String apellido = apellidos[(int) (Math.random() * apellidos.length)];
+    Alumno alumno = new Alumno(nombre, apellido, nombre + "." + apellido + "@example.com");
     crearFilaAlumno(alumno);
   }
 }
