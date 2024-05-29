@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1074722721687",
+    "project_id": "luju-db",
+    "storage_bucket": "luju-db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074722721687:android:155be4d5ff79256b683ed2",
+        "android_client_info": {
+          "package_name": "com.davinci.sge_luju"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbtF2c005Csqf708cTy4pp-nqf_9GVfBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

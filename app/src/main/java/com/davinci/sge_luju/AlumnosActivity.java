@@ -1,7 +1,10 @@
 package com.davinci.sge_luju;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,14 +12,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.davinci.sge_luju.model.Alumno;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlumnosActivity extends AppCompatActivity {
 
@@ -33,19 +44,30 @@ public class AlumnosActivity extends AppCompatActivity {
 
     // Creo un array para almacenar 10 alumnos
     Alumno[] alumnos = new Alumno[3];
+    ArrayList<Alumno> alumnosList = new ArrayList<>();
+
+    // Conexion a DB FIREBASE
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    db.collection("usuarios")
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                  for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.d(TAG, document.getId() + " => " + document.getData().values().toArray()[0]);
+                  }
+                } else {
+                  Log.w(TAG, "Error getting documents.", task.getException());
+                }
+              }
+            });
 
     // Creamos manualmente instancias de Alumno y las agregamos al array
     alumnos[0] = new Alumno("Juan", "Perez", "juan@example.com");
     alumnos[1] = new Alumno("María", "González", "maria@example.com");
     alumnos[2] = new Alumno("Carlos", "Rodríguez", "carlos@example.com");
-    /*alumnos[3] = new Alumno("Laura", "Martínez", "laura@example.com");
-    alumnos[4] = new Alumno("Pedro", "Sánchez", "pedro@example.com");
-    alumnos[5] = new Alumno("Ana", "López", "ana@example.com");
-    alumnos[6] = new Alumno("Sofía", "Fernández", "sofia@example.com");
-    alumnos[7] = new Alumno("Diego", "Díaz", "diego@example.com");
-    alumnos[8] = new Alumno("Elena", "Torres", "elena@example.com");
-    alumnos[9] = new Alumno("Pablo", "Ruiz", "pablo@example.com");*/
-
 
     // CONTAINER DE LISTADO DE ALUMNOS
     LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
