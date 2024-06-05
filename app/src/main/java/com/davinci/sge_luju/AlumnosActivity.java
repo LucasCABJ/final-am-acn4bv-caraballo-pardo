@@ -107,7 +107,7 @@ public class AlumnosActivity extends AppCompatActivity {
         alumnoPicture.setLayoutParams(alumnoPictureParams);
         alumnoPicture.setImageResource(R.drawable.logoescuela); // setImageResource() espera recibir un int ??
         alumnoPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
+        
         // Agrego imagen a la fila
         alumnoRow.addView(alumnoPicture);
 
