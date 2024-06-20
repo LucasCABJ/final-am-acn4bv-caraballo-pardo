@@ -3,7 +3,6 @@ package com.davinci.sge_luju;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,14 +22,20 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.davinci.sge_luju.model.Alumno;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Period;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 public class AlumnosActivity extends AppCompatActivity {
 
@@ -46,50 +51,58 @@ public class AlumnosActivity extends AppCompatActivity {
         });
 
         //  CHEQUEAR CONNECTIVITY
-
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
 
         if (networkInfo != null && networkInfo.isConnected()) {
             Log.d(TAG, "Conectividad funcionando correctamente");
             // Conexion a DB FIREBASE
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            db.collection("usuarios")
+            db.collection("alumno")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            TextView statusTextView = AlumnosActivity.this.findViewById(R.id.statusText);
                             if (task.isSuccessful()) {
+                                statusTextView.setVisibility(View.GONE);
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData().values().toArray()[0]);
+                                    try {
+                                        Map<String, Object> campos = document.getData();
+                                        System.out.println(campos);
+                                        String nombre = String.valueOf(campos.get("nombre"));
+                                        String apellido = String.valueOf(campos.get("apellido"));
+                                        String curso = "Cursando: 1° Año";
+                                        Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
+                                        // TODO: IMPROVE WAY OF CALCULATING AGE
+                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                                        int d1 = Integer.parseInt(formatter.format(fecNacimientoTimeStamp.toDate()));
+                                        int d2 = Integer.parseInt(formatter.format(Calendar.getInstance().getTime()));
+                                        int age = (d2 - d1) / 10000;
+                                        Alumno nuevoAlumno = new Alumno(nombre, apellido,curso, "prueba", age);
+                                        crearFilaAlumno(nuevoAlumno);
+                                    } catch (ClassCastException cce) {
+                                        Log.d(TAG, "Error al castear o obtener data de: "+document.getId());
+                                    }
                                 }
                             } else {
-                                Log.w(TAG, "Error getting documents.", task.getException());
+                                statusTextView.setText("Ha ocurrido un error al cargar la información, intente de nuevo en unos minutos. En caso de continuar fallando, contacta con un administrador");
                             }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            TextView statusTextView = AlumnosActivity.this.findViewById(R.id.statusText);
+                            statusTextView.setText("Ha ocurrido un error al cargar la información, intente de nuevo en unos minutos. En caso de continuar fallando, contacta con un administrador");
                         }
                     });
         } else {
           Log.d(TAG, "No hay conectividad");
         }
 
-        // Creo un array para almacenar 10 alumnos
-        Alumno[] alumnos = new Alumno[3];
-        ArrayList<Alumno> alumnosList = new ArrayList<>();
-
-        // Creamos manualmente instancias de Alumno y las agregamos al array
-        alumnos[0] = new Alumno("Juan", "Perez", "juan@example.com");
-        alumnos[1] = new Alumno("María", "González", "maria@example.com");
-        alumnos[2] = new Alumno("Carlos", "Rodríguez", "carlos@example.com");
-
         // CONTAINER DE LISTADO DE ALUMNOS
         LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
-
-        for (int i = 0; i < alumnos.length; i++) {
-            Alumno alumno = alumnos[i];
-            crearFilaAlumno(alumno);
-        }
     }
     // Fin onCreate
 
@@ -137,7 +150,7 @@ public class AlumnosActivity extends AppCompatActivity {
         // Creo edad del alumno
         TextView alumnoAge = new TextView(this);
         alumnoAge.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        alumnoAge.setText(String.format(getString(R.string.edad_alumno), alumno.getEdadHardcodeada())); // formateado según strings.xml (recomendación del linter)
+        alumnoAge.setText(String.format(getString(R.string.edad_alumno), alumno.getEdad())); // formateado según strings.xml (recomendación del linter)
 
         // Agrego edad a layout de data del alumno
         alumnoRowDataLayout.addView(alumnoAge);
@@ -149,14 +162,5 @@ public class AlumnosActivity extends AppCompatActivity {
         LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
         alumnosContainer.addView(alumnoRow);
 
-    }
-
-    public void agregarAlumnoPrueba(View view) {
-        String[] apellidos = {"Perez", "González", "Rodríguez", "Martínez", "Sánchez", "López", "Fernández", "Díaz", "Torres", "Ruiz"};
-        String[] nombres = {"Juan", "María", "Carlos", "Laura", "Pedro", "Ana", "Sofía", "Diego", "Elena", "Pablo"};
-        String nombre = nombres[(int) (Math.random() * nombres.length)];
-        String apellido = apellidos[(int) (Math.random() * apellidos.length)];
-        Alumno alumno = new Alumno(nombre, apellido, nombre + "." + apellido + "@example.com");
-        crearFilaAlumno(alumno);
     }
 }

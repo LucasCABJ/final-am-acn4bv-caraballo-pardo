@@ -35,25 +35,21 @@
                 tools:layout_gravity="bottom|end"
                 tools:srcCompat="@drawable/ic_launcher_foreground" />
 
-            <Button
-                android:id="@+id/crearAlumnoDePruebaBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="agregarAlumnoPrueba"
-                android:text="@string/alumnodepruebaBtn_text" />
-
         </LinearLayout>
 
-        <LinearLayout
+        <SearchView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:queryHint="Buscar alumno..." />
 
-            <SearchView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:queryHint="Buscar alumno..." />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="50dp"
+            android:text="@string/alumnos_loading_text"
+            android:textAlignment="center"
+            android:textSize="20sp" />
 
         <ScrollView
             android:id="@+id/MainContentScroll"

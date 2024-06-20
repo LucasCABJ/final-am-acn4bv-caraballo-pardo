@@ -8,26 +8,37 @@ public class Alumno {
   private String nombre;
   private String apellido;
   private String dni;
-  private String email;
   private String telefono;
   private String direccion;
-  private LocalDate fechaNacimiento;
-  private String foto;
-  // TODO: Implementar relación con Curso
-  //private Curso curso;
+  private Integer edad;
   private String curso;
   private int id;
 
-  public Alumno(String nombre, String apellido, String email) {
+  public Alumno(String nombre, String apellido, String curso, String imageURL) {
     setNombre(nombre);
     setApellido(apellido);
-    setEmail(email);
     getEdadHardcodeada();
-    setCurso("Desarrollo de Aplicaciones Moviles");
-    setFoto("R.drawable.logoescuela"); // <- IMG hardcodeada
+    setCurso(curso);
+  }
+
+  public Alumno(String nombre, String apellido, String curso, String imageURL, Integer edad) {
+    setNombre(nombre);
+    setApellido(apellido);
+    getEdadHardcodeada();
+    setEdad(edad);
+    setCurso(curso);
   }
 
   // Setters y Getters
+
+  public Integer getEdad() {
+    return edad;
+  }
+
+  public void setEdad(Integer edad) {
+    this.edad = edad;
+  }
+
   public String getNombre() {
     return nombre;
   }
@@ -52,30 +63,9 @@ public class Alumno {
     this.curso = curso;
   }
 
-  public String getFoto() {
-    return foto;
-  }
-
-  private void setFoto(String s) {
-    this.foto = s;
-  }
-
-  private void setEmail(String email) {
-    this.email = email;
-  }
-
-
   public String getFullName() {
     return getNombre() + " " + getApellido();
   }
-
-//  public int calcularEdad() {
-//    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//      Period periodo = Period.between(fechaNacimiento, LocalDate.now());
-//      return periodo.getYears();
-//    }
-//    return 20;
-//  }
 
   public int getEdadHardcodeada() {
     return (int) ((Math.random()*10) + 20);
