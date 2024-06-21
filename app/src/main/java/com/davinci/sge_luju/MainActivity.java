@@ -3,6 +3,7 @@ package com.davinci.sge_luju;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        LinearLayout cardAlumnos = MainActivity.this.findViewById(R.id.CardAlumnos);
+        cardAlumnos.setOnClickListener(this::goToAlumnosView);
     }
 
-    public void goToAlumnosView(View view) {
+    private void goToAlumnosView(View view) {
         Intent nextView = new Intent(this, AlumnosActivity.class);
         startActivity(nextView);
     }
