@@ -251,7 +251,7 @@ public class AlumnosActivity extends AppCompatActivity {
             alumnoPicture.setImageResource(R.drawable.logoescuela);
         }
         alumnoPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
+        
         // Agrego imagen a la fila
         alumnoRow.addView(alumnoPicture);
 
