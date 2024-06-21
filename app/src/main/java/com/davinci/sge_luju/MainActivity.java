@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goToAlumnosView(View view) {
+    private void goToAlumnosView(View view) {
         Intent nextView = new Intent(this, AlumnosActivity.class);
         startActivity(nextView);
     }

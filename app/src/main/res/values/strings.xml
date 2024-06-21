@@ -27,4 +27,8 @@
     <string name="welcome_msg">¡Bienvenido a LUJU!</string>
     <string name="example_error_login_message">Error message</string>
     <string name="main_login_failed_message">Lo sentimos, el usuario o contraseña es incorrecto o no se encuentra registrado</string>
+    <string name="alumnos_loading_text">Cargando alumnos...</string>
+    <string name="alumnos_load_fail_error_msg">Ha ocurrido un error al cargar la información, intente de nuevo en unos minutos. En caso de continuar fallando, contacta con un administrador</string>
+    <string name="alumnos_activity_no_results">No se encontrado ningún resultado</string>
+    <string name="alumnos_activity_buscando_msg">Buscando Alumnos...</string>
 </resources>
