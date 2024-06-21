@@ -38,18 +38,35 @@
         </LinearLayout>
 
         <SearchView
+            android:id="@+id/searchAlumnos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="#E1E1E1"
             android:queryHint="Buscar alumno..." />
 
-        <TextView
-            android:id="@+id/statusText"
+        <LinearLayout
+            android:id="@+id/statusContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="50dp"
-            android:text="@string/alumnos_loading_text"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="50dp"
+                android:text="@string/alumnos_loading_text"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp" />
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/MainContentScroll"
