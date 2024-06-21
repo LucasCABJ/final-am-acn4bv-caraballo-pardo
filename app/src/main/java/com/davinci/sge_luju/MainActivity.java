@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 this.mAuth.signOut();
                 this.recreate();
             });
+            LinearLayout alumnosCard = this.findViewById(R.id.CardAlumnos);
+            alumnosCard.setOnClickListener(this::goToAlumnosView);
         } else {
             setContentView(R.layout.activity_main_no_user);
             EdgeToEdge.enable(this);
