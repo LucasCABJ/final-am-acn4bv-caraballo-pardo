@@ -30,23 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        // Me traigo una instancia de FirebaseAuth
         this.mAuth = FirebaseAuth.getInstance();
-        // TODO: realizar login adecuado
-        mAuth.signInWithEmailAndPassword("lucas.caraballo@davinci.edu.ar", "12345678")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        }
-                    }
-                });
-        if (mAuth.getCurrentUser() == null) {
+        if (mAuth.getCurrentUser() != null) {
             setContentView(R.layout.activity_main);
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -54,7 +39,26 @@ public class MainActivity extends AppCompatActivity {
                 return insets;
             });
         } else {
-            setContentView(R.layout.activity_login);
+            Intent loginView = new Intent(this, LoginActivity.class);
+            startActivity(loginView);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.mAuth = FirebaseAuth.getInstance();
+        System.out.println("back in main activity cur user: "+mAuth.getCurrentUser());
+        if (mAuth.getCurrentUser() != null) {
+            setContentView(R.layout.activity_main);
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        } else {
+            Intent loginView = new Intent(this, LoginActivity.class);
+            startActivity(loginView);
         }
     }
 
