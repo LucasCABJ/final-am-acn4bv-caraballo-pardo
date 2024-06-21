@@ -55,6 +55,8 @@ public class AlumnosActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // CONFIGURACION SEARCHBAR DE ALUMNOS
         SearchView searchView = this.findViewById(R.id.searchAlumnos);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -80,6 +82,7 @@ public class AlumnosActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         //  CHEQUEAR CONNECTIVITY
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
