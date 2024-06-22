@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginButton.animate().translationY(150);
+                loginButton.animate().translationY(130);
                 loginErrorMessage.setVisibility(View.GONE);
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 mAuth.signInWithEmailAndPassword(usernameEditText.getText().toString(), passwordEditText.getText().toString())

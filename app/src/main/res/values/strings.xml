@@ -14,7 +14,7 @@
     <string name="edad_alumno">Edad: %1$d</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Iniciar Sesión</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
@@ -32,4 +32,10 @@
     <string name="alumnos_activity_no_results">No se encontrado ningún resultado</string>
     <string name="alumnos_activity_buscando_msg">Buscando Alumnos...</string>
     <string name="loading_personal_docente_msg">Cargando personal...</string>
+    <string name="log_in_nav_title">Iniciar Sesión</string>
+    <string name="alumnos_nav_title">Alumnos</string>
+    <string name="docentes_nav_title">Docentes</string>
+    <string name="cursos_nav_title">Cursos</string>
+    <string name="loading_cursos_msg">Cargando cursos...</string>
+    <string name="searching_cursos_msg">Buscando cursos...</string>
 </resources>
