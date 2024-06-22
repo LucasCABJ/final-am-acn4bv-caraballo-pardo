@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SGELUJU"
         tools:targetApi="31">
         <activity
+            android:name=".CursosActivity"
+            android:exported="false" />
+        <activity
             android:name=".DocentesActivity"
             android:exported="false" />
         <activity

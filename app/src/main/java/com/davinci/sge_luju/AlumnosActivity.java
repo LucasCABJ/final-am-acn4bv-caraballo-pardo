@@ -124,6 +124,7 @@ public class AlumnosActivity extends AppCompatActivity {
                                     Map<String, Object> campos = document.getData();
                                     String nombre = String.valueOf(campos.get("nombre"));
                                     String apellido = String.valueOf(campos.get("apellido"));
+                                    // TODO: TOMAR DATOS DE CURSO DE LA DB
                                     String curso = "Cursando: 1° Año";
                                     Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
                                     String imagenURL = (String) campos.get("imagen_url");
@@ -243,7 +244,8 @@ public class AlumnosActivity extends AppCompatActivity {
 
         // Creo imagen de la fila alumno
         ImageView alumnoPicture = new ImageView(this);
-        ViewGroup.LayoutParams alumnoPictureParams = new ViewGroup.LayoutParams(200, 200);
+        LinearLayout.LayoutParams alumnoPictureParams = new LinearLayout.LayoutParams(200, 200);
+        alumnoPictureParams.setMargins(50,0,50,0);
         alumnoPicture.setLayoutParams(alumnoPictureParams);
         if (alumno.getImageURL() != null) {
             try {
