@@ -31,4 +31,5 @@
     <string name="alumnos_load_fail_error_msg">Ha ocurrido un error al cargar la información, intente de nuevo en unos minutos. En caso de continuar fallando, contacta con un administrador</string>
     <string name="alumnos_activity_no_results">No se encontrado ningún resultado</string>
     <string name="alumnos_activity_buscando_msg">Buscando Alumnos...</string>
+    <string name="loading_personal_docente_msg">Cargando personal...</string>
 </resources>
