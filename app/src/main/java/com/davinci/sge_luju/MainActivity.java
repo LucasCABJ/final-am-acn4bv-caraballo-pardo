@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             });
             LinearLayout alumnosCard = this.findViewById(R.id.CardAlumnos);
             alumnosCard.setOnClickListener(this::goToAlumnosView);
+            LinearLayout docentesCard = this.findViewById(R.id.CardPersonalDocente);
+            docentesCard.setOnClickListener(this::goToDocentesView);
         } else {
             setContentView(R.layout.activity_main_no_user);
             EdgeToEdge.enable(this);
@@ -72,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToAlumnosView(View view) {
         Intent nextView = new Intent(this, AlumnosActivity.class);
+        startActivity(nextView);
+    }
+
+    private void goToDocentesView(View view) {
+        Intent nextView = new Intent(this, DocentesActivity.class);
         startActivity(nextView);
     }
 }
