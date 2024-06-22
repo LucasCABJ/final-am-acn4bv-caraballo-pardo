@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,15 +38,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-public class DocentesActivity extends AppCompatActivity {
-
-
+public class CursosActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_docentes);
+        setContentView(R.layout.activity_cursos);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,17 +52,17 @@ public class DocentesActivity extends AppCompatActivity {
         });
 
         // CONFIGURACION SEARCHBAR DE ALUMNOS
-        SearchView searchView = this.findViewById(R.id.searchPersonalDocente);
+        SearchView searchView = this.findViewById(R.id.searchCursos);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                DocentesActivity.this.findViewById(R.id.searchPersonalDocente).clearFocus();
+                CursosActivity.this.findViewById(R.id.searchCursos).clearFocus();
                 if(query.isEmpty()) {
-                    cargarPersonalDocente(FirebaseFirestore.getInstance());
+                    cargarAlumnos(FirebaseFirestore.getInstance());
                 } else {
-                    LinearLayout alumnosContainer = DocentesActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
+                    LinearLayout alumnosContainer = CursosActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
                     alumnosContainer.removeAllViews();
-                    buscarPersonalDocente(FirebaseFirestore.getInstance(), query);
+                    buscarAlumnos(FirebaseFirestore.getInstance(), query);
                 }
                 return true;
             }
@@ -71,9 +70,9 @@ public class DocentesActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.isEmpty()) {
-                    LinearLayout alumnosContainer = DocentesActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
+                    LinearLayout alumnosContainer = CursosActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
                     alumnosContainer.removeAllViews();
-                    cargarPersonalDocente(FirebaseFirestore.getInstance());
+                    cargarAlumnos(FirebaseFirestore.getInstance());
                 }
                 return true;
             }
@@ -87,30 +86,30 @@ public class DocentesActivity extends AppCompatActivity {
             Log.d(TAG, "Conectividad funcionando correctamente");
             // Conexion a DB FIREBASE
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            cargarPersonalDocente(db);
+            cargarAlumnos(db);
 
         } else {
             Log.d(TAG, "No hay conectividad");
         }
     }
 
-    private void cargarPersonalDocente(FirebaseFirestore db) {
-        LinearLayout statusContainerView = DocentesActivity.this.findViewById(R.id.statusContainer);
+    private void cargarAlumnos(FirebaseFirestore db) {
+        LinearLayout statusContainerView = CursosActivity.this.findViewById(R.id.statusContainer);
         statusContainerView.setVisibility(View.VISIBLE);
         TextView statusText = statusContainerView.findViewById(R.id.statusText);
         statusText.setVisibility(View.VISIBLE);
-        statusText.setText(R.string.loading_personal_docente_msg);
+        statusText.setText(R.string.loading_cursos_msg);
         ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
         statusProgressBar.setVisibility(View.VISIBLE);
-        LinearLayout docentesContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
-        docentesContainer.removeAllViews();
-        db.collection("personal_docente")
+        LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
+        alumnosContainer.removeAllViews();
+        db.collection("curso")
                 .orderBy("nombre")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LinearLayout statusContainerView = DocentesActivity.this.findViewById(R.id.statusContainer);
+                        LinearLayout statusContainerView = CursosActivity.this.findViewById(R.id.statusContainer);
                         if (task.isSuccessful()) {
                             int resultados = 0;
                             statusContainerView.setVisibility(View.GONE);
@@ -119,23 +118,8 @@ public class DocentesActivity extends AppCompatActivity {
                                     resultados++;
                                     Map<String, Object> campos = document.getData();
                                     String nombre = String.valueOf(campos.get("nombre"));
-                                    String apellido = String.valueOf(campos.get("apellido"));
-                                    String cargo = String.valueOf(campos.get("cargo"));
-                                    Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
                                     String imagenURL = (String) campos.get("imagen_url");
-                                    // TODO: IMPROVE WAY OF CALCULATING AGE
-                                    int age;
-                                    if (fecNacimientoTimeStamp != null) {
-                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-                                        int d1 = Integer.parseInt(formatter.format(fecNacimientoTimeStamp.toDate()));
-                                        int d2 = Integer.parseInt(formatter.format(Calendar.getInstance().getTime()));
-                                        age = (d2 - d1) / 10000;
-                                    } else {
-                                        age = 0;
-                                    }
-                                    // TODO: CREATE ADECUATE "DOCENTE" OBJECT
-                                    Alumno nuevoAlumno = new Alumno(document.getId(), nombre, apellido, cargo, imagenURL, age);
-                                    crearFilaDocente(nuevoAlumno);
+                                    crearFilaCurso(imagenURL, nombre, document.getId());
                                 } catch (ClassCastException npe) {
                                     Log.d(TAG, "Error al castear o obtener data de: "+document.getId());
                                 }
@@ -157,52 +141,37 @@ public class DocentesActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        TextView statusTextView = DocentesActivity.this.findViewById(R.id.statusText);
+                        TextView statusTextView = CursosActivity.this.findViewById(R.id.statusText);
                         statusTextView.setText(R.string.alumnos_load_fail_error_msg);
                     }
                 });
     }
 
-    private void buscarPersonalDocente(FirebaseFirestore db, String busqueda) {
-        LinearLayout statusContainerView = DocentesActivity.this.findViewById(R.id.statusContainer);
+    private void buscarAlumnos(FirebaseFirestore db, String busqueda) {
+        LinearLayout statusContainerView = CursosActivity.this.findViewById(R.id.statusContainer);
         statusContainerView.setVisibility(View.VISIBLE);
         TextView statusText = statusContainerView.findViewById(R.id.statusText);
-        statusText.setText(R.string.loading_personal_docente_msg);
+        statusText.setText(R.string.searching_cursos_msg);
         statusText.setVisibility(View.VISIBLE);
         ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
         statusProgressBar.setVisibility(View.VISIBLE);
-        db.collection("personal_docente")
+        db.collection("alumno")
                 .orderBy("nombre")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LinearLayout statusContainerView = DocentesActivity.this.findViewById(R.id.statusContainer);
+                        LinearLayout statusContainerView = CursosActivity.this.findViewById(R.id.statusContainer);
                         if (task.isSuccessful()) {
                             int resultados = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 try {
                                     Map<String, Object> campos = document.getData();
                                     String nombre = String.valueOf(campos.get("nombre"));
-                                    String apellido = String.valueOf(campos.get("apellido"));
-                                    String nombreCompleto = nombre + " " + apellido;
-                                    if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase())) continue;
+                                    if (!nombre.toLowerCase().contains(busqueda.toLowerCase())) continue;
                                     resultados++;
-                                    String curso = "Cursando: 1° Año";
-                                    Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
                                     String imagenURL = (String) campos.get("imagen_url");
-                                    // TODO: IMPROVE WAY OF CALCULATING AGE
-                                    int age;
-                                    if (fecNacimientoTimeStamp != null) {
-                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-                                        int d1 = Integer.parseInt(formatter.format(fecNacimientoTimeStamp.toDate()));
-                                        int d2 = Integer.parseInt(formatter.format(Calendar.getInstance().getTime()));
-                                        age = (d2 - d1) / 10000;
-                                    } else {
-                                        age = 0;
-                                    }
-                                    Alumno nuevoAlumno = new Alumno(document.getId(), nombre, apellido, curso, imagenURL, age);
-                                    crearFilaDocente(nuevoAlumno);
+                                    crearFilaCurso(imagenURL, nombre, document.getId());
                                 } catch (ClassCastException npe) {
                                     Log.d(TAG, "Error al castear o obtener data de: "+document.getId());
                                 }
@@ -224,14 +193,13 @@ public class DocentesActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        TextView statusTextView = DocentesActivity.this.findViewById(R.id.statusText);
+                        TextView statusTextView = CursosActivity.this.findViewById(R.id.statusText);
                         statusTextView.setText(R.string.alumnos_load_fail_error_msg);
                     }
                 });
     }
 
-    // TODO: refactorizar -> recibe alumno
-    private void crearFilaDocente(Alumno alumno) {
+    private void crearFilaCurso(String imageURL, String nombre, String ID) {
         // Creo fila de alumno
         LinearLayout alumnoRow = new LinearLayout(this);
         alumnoRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -244,9 +212,9 @@ public class DocentesActivity extends AppCompatActivity {
         LinearLayout.LayoutParams alumnoPictureParams = new LinearLayout.LayoutParams(200, 200);
         alumnoPictureParams.setMargins(50,0,50,0);
         alumnoPicture.setLayoutParams(alumnoPictureParams);
-        if (alumno.getImageURL() != null) {
+        if (imageURL != null) {
             try {
-                Glide.with(this).load(alumno.getImageURL()).into(alumnoPicture);
+                Glide.with(this).load(imageURL).into(alumnoPicture);
             } catch (Exception e) {
                 alumnoPicture.setImageResource(R.drawable.logoescuela);
             }
@@ -267,13 +235,15 @@ public class DocentesActivity extends AppCompatActivity {
 
         // Creo nombre del alumno
         TextView alumnoName = new TextView(this);
-        alumnoName.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        alumnoName.setText(alumno.getFullName());
+        alumnoName.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        alumnoName.setText(nombre);
+        alumnoName.setTextSize(20);
+        alumnoName.setGravity(Gravity.CENTER);
 
         // Agrego nombre a layout de data del alumno
         alumnoRowDataLayout.addView(alumnoName);
 
-        // Creo curso del alumno
+        /*// Creo curso del alumno
         TextView alumnoGrade = new TextView(this);
         alumnoGrade.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         alumnoGrade.setText(alumno.getCurso());
@@ -287,15 +257,15 @@ public class DocentesActivity extends AppCompatActivity {
         alumnoAge.setText(String.format(getString(R.string.edad_alumno), alumno.getEdad())); // formateado según strings.xml (recomendación del linter)
 
         // Agrego edad a layout de data del alumno
-        alumnoRowDataLayout.addView(alumnoAge);
+        alumnoRowDataLayout.addView(alumnoAge);*/
 
         // Agrego data a la row
         alumnoRow.addView(alumnoRowDataLayout);
 
         // OnClickListener para cada alumno
-        // TODO: Indent y Bundle hacía vista Docente
+        // TODO: Indent y Bundle hacía vista docente
         alumnoRow.setOnClickListener((v) -> {
-            System.out.println(alumno.getId());
+            System.out.println(ID);
         });
 
         // Agrego fila al contenedor de alumnos
