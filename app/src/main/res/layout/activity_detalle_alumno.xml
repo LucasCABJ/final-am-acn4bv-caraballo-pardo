@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlumnosActivity">
+    tools:context=".DetalleAlumnoActivity">
 
     <!-- Main Linear Layout -->
     <LinearLayout
@@ -29,43 +29,34 @@
 
             <!-- Titulo de la actividad -->
             <TextView
-                android:id="@+id/SchoolNavLogo"
+                android:id="@+id/textViewNombreAlumno"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:textSize="25sp"
-                android:textColor="@color/white"
                 android:gravity="center"
-                app:tint="@color/white"
-                android:text="@string/alumnos_nav_title" />
+                android:text="Alumno Pepito"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                app:tint="@color/white" />
         </LinearLayout>
 
-        <!-- Barra de Busqueda -->
-        <SearchView
-            android:id="@+id/searchAlumnos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="#E1E1E1"
-            android:queryHint="@string/studentQueryHint" />
-
         <!-- Contenedor de los estados -->
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/statusContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- Spinner -->
+            &lt;!&ndash; Spinner &ndash;&gt;
             <TextView
                 android:id="@+id/statusText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="50dp"
-                android:text="@string/alumnos_loading_text"
+                android:text="@string/loading_student_data"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
-            <!-- Progress Bar -->
+            &lt;!&ndash; Progress Bar &ndash;&gt;
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
@@ -73,7 +64,7 @@
                 android:indeterminateTint="@color/progress_color"
                 android:layout_height="wrap_content"
                 android:paddingTop="15dp" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <!-- Scroll View del contenido principal -->
         <ScrollView

@@ -5,9 +5,15 @@ import static android.content.ContentValues.TAG;
 import static com.google.firebase.firestore.Filter.or;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +32,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.davinci.sge_luju.model.Alumno;
+import com.davinci.sge_luju.utils.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -84,15 +91,11 @@ public class AlumnosActivity extends AppCompatActivity {
         });
 
         //  CHEQUEAR CONNECTIVITY
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (NetworkUtil.isNetworkAvailable(this)) {
             Log.d(TAG, "Conectividad funcionando correctamente");
             // Conexion a DB FIREBASE
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             cargarAlumnos(db);
-
         } else {
             Log.d(TAG, "No hay conectividad");
         }
@@ -201,9 +204,7 @@ public class AlumnosActivity extends AppCompatActivity {
                                 String nombre = String.valueOf(campos.get("nombre"));
                                 String apellido = String.valueOf(campos.get("apellido"));
                                 String nombreCompleto = nombre + " " + apellido;
-                                if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase()))
-                                    continue;
-
+                                if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase())) continue;
                                 resultados++;
                                 Alumno nuevoAlumno = crearAlumnoDesdeDocumento(document);
                                 crearFilaAlumno(nuevoAlumno);
@@ -220,77 +221,107 @@ public class AlumnosActivity extends AppCompatActivity {
     }
 
 
-    private void crearFilaAlumno(Alumno alumno) {
-        // Creo fila de alumno
+    private void crearFilaAlumno(@NonNull Alumno alumno) {
+        // Creación del contenedor principal
         LinearLayout alumnoRow = new LinearLayout(this);
         alumnoRow.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams alumnoRowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        alumnoRowParams.setMargins(0, 0, 0, 30);
+        LinearLayout.LayoutParams alumnoRowParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alumnoRowParams.setMargins(
+                getResources().getDimensionPixelSize(R.dimen.alumno_row_margin_start),
+                getResources().getDimensionPixelSize(R.dimen.alumno_row_margin_top),
+                getResources().getDimensionPixelSize(R.dimen.alumno_row_margin_end),
+                getResources().getDimensionPixelSize(R.dimen.alumno_row_margin_bottom));
         alumnoRow.setLayoutParams(alumnoRowParams);
 
-        // Creo imagen de la fila alumno
+        // ImageView para la imagen del alumno
         ImageView alumnoPicture = new ImageView(this);
-        LinearLayout.LayoutParams alumnoPictureParams = new LinearLayout.LayoutParams(200, 200);
-        alumnoPictureParams.setMargins(50, 0, 50, 0);
+        LinearLayout.LayoutParams alumnoPictureParams = new LinearLayout.LayoutParams(
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_width),
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_height));
+        alumnoPictureParams.setMargins(
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_margin_start),
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_margin_top),
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_margin_end),
+                getResources().getDimensionPixelSize(R.dimen.alumno_image_margin_bottom));
         alumnoPicture.setLayoutParams(alumnoPictureParams);
-        if (alumno.getImageURL() != null) {
-            try {
-                Glide.with(this).load(alumno.getImageURL()).into(alumnoPicture);
-            } catch (Exception e) {
-                alumnoPicture.setImageResource(R.drawable.logoescuela);
-            }
-        } else {
-            alumnoPicture.setImageResource(R.drawable.logoescuela);
-        }
         alumnoPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        cargarImagenAlumno(alumnoPicture, alumno.getImageURL());
 
-        // Agrego imagen a la fila
-        alumnoRow.addView(alumnoPicture);
-
-        // Creo layout vertical que contiene información
-        LinearLayout alumnoRowDataLayout = new LinearLayout(this);
-        alumnoRowDataLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams alumnoRowDataLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        alumnoRowDataLayoutParams.setMargins(15, 0, 0, 5);
-        alumnoRowDataLayout.setLayoutParams(alumnoRowDataLayoutParams);
-
-        // Creo nombre del alumno
+        // TextView para el nombre del alumno
         TextView alumnoName = new TextView(this);
-        alumnoName.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        alumnoName.setText(alumno.getFullName());
+        LinearLayout.LayoutParams alumnoNameParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alumnoName.setLayoutParams(alumnoNameParams);
 
-        // Agrego nombre a layout de data del alumno
-        alumnoRowDataLayout.addView(alumnoName);
+        // Crear un SpannableString con el nombre del alumno
+        String nombreCompleto = alumno.getFullName();
+        SpannableString spannableNombre = new SpannableString(nombreCompleto);
 
-        // Creo curso del alumno
+        // Aplicar estilo negrita al nombre
+        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+        spannableNombre.setSpan(boldSpan, 0, nombreCompleto.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Aumentar el tamaño de la fuente del nombre
+        float scale = getResources().getDisplayMetrics().density; // Obtener la densidad de la pantalla
+        float fontSizeInPixels = alumnoName.getTextSize(); // Tamaño de fuente actual en píxeles
+        float scaledSizeInPixels = fontSizeInPixels * 1.2f; // Aumentar el tamaño en 1.2 veces
+        RelativeSizeSpan sizeSpan = new RelativeSizeSpan(1.2f); // Escalar tamaño en 1.2 veces
+        spannableNombre.setSpan(sizeSpan, 0, nombreCompleto.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Setear el SpannableString en el TextView
+        alumnoName.setText(spannableNombre);
+
+        // TextView para el curso del alumno
         TextView alumnoGrade = new TextView(this);
-        alumnoGrade.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams alumnoGradeParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alumnoGrade.setLayoutParams(alumnoGradeParams);
         alumnoGrade.setText(alumno.getCurso());
 
-        // Agrego curso a layout de data del alumno
-        alumnoRowDataLayout.addView(alumnoGrade);
-
-        // Creo edad del alumno
+        // TextView para la edad del alumno
         TextView alumnoAge = new TextView(this);
-        alumnoAge.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        alumnoAge.setText(String.format(getString(R.string.edad_alumno), alumno.getEdad())); // formateado según strings.xml (recomendación del linter)
+        LinearLayout.LayoutParams alumnoAgeParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alumnoAge.setLayoutParams(alumnoAgeParams);
+        alumnoAge.setText(getString(R.string.edad_alumno, alumno.getEdad())); // formateado según strings.xml
 
-        // Agrego edad a layout de data del alumno
-        alumnoRowDataLayout.addView(alumnoAge);
+        // Agregar vistas al contenedor principal
+        LinearLayout alumnoDataLayout = new LinearLayout(this);
+        alumnoDataLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams alumnoDataLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        alumnoDataLayout.setLayoutParams(alumnoDataLayoutParams);
+        alumnoDataLayout.addView(alumnoName);
+        alumnoDataLayout.addView(alumnoGrade);
+        alumnoDataLayout.addView(alumnoAge);
 
-        // Agrego data a la row
-        alumnoRow.addView(alumnoRowDataLayout);
+        alumnoRow.addView(alumnoPicture);
+        alumnoRow.addView(alumnoDataLayout);
 
-        // OnClickListener para cada alumno
-        // TODO: Indent y Bundle hacía vista docente
+        // Agregar OnClickListener para cada alumno
         alumnoRow.setOnClickListener((v) -> {
-            System.out.println(alumno.getId());
+            // Acciones al hacer clic en el alumno
+            Intent intent = new Intent(this, DetalleAlumnoActivity.class);
+            intent.putExtra("alumno", alumno);
+            startActivity(intent);
         });
 
-        // Agrego fila al contenedor de alumnos
-        LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
+        // Agregar la fila al contenedor de alumnos
+        LinearLayout alumnosContainer = findViewById(R.id.MainContentScrollLinearLayout);
         alumnosContainer.addView(alumnoRow);
-
-
     }
+
+    private void cargarImagenAlumno(ImageView imageView, String imageUrl) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            try {
+                Glide.with(this).load(imageUrl).into(imageView);
+            } catch (Exception e) {
+                imageView.setImageResource(R.drawable.logoescuela); // Imagen predeterminada en caso de error
+            }
+        } else {
+            imageView.setImageResource(R.drawable.logoescuela); // Imagen predeterminada si no hay URL válida
+        }
+    }
+
 }
