@@ -39,4 +39,5 @@
     <string name="loading_cursos_msg">Cargando cursos...</string>
     <string name="searching_cursos_msg">Buscando cursos...</string>
     <string name="studentQueryHint">Buscar alumno...</string>
+    <string name="loadingStudentData">Cargando Datos del Alumno</string>
 </resources>
