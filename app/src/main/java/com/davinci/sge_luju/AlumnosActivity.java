@@ -62,7 +62,7 @@ public class AlumnosActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 AlumnosActivity.this.findViewById(R.id.searchAlumnos).clearFocus();
-                if(query.isEmpty()) {
+                if (query.isEmpty()) {
                     cargarAlumnos(FirebaseFirestore.getInstance());
                 } else {
                     LinearLayout alumnosContainer = AlumnosActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
@@ -74,7 +74,7 @@ public class AlumnosActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.isEmpty()) {
+                if (newText.isEmpty()) {
                     LinearLayout alumnosContainer = AlumnosActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
                     alumnosContainer.removeAllViews();
                     cargarAlumnos(FirebaseFirestore.getInstance());
@@ -94,145 +94,131 @@ public class AlumnosActivity extends AppCompatActivity {
             cargarAlumnos(db);
 
         } else {
-          Log.d(TAG, "No hay conectividad");
+            Log.d(TAG, "No hay conectividad");
         }
     }
 
-    private void cargarAlumnos(FirebaseFirestore db) {
-        LinearLayout statusContainerView = AlumnosActivity.this.findViewById(R.id.statusContainer);
-        statusContainerView.setVisibility(View.VISIBLE);
+    // Método para mostrar estado de carga
+    private void mostrarEstadoDeCarga(boolean mostrando, String mensaje) {
+        LinearLayout statusContainerView = findViewById(R.id.statusContainer);
+        statusContainerView.setVisibility(mostrando ? View.VISIBLE : View.GONE);
         TextView statusText = statusContainerView.findViewById(R.id.statusText);
-        statusText.setVisibility(View.VISIBLE);
-        statusText.setText(R.string.alumnos_loading_text);
+        statusText.setVisibility(mostrando ? View.VISIBLE : View.GONE);
+        statusText.setText(mensaje);
         ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
-        statusProgressBar.setVisibility(View.VISIBLE);
-        LinearLayout alumnosContainer = this.findViewById(R.id.MainContentScrollLinearLayout);
-        alumnosContainer.removeAllViews();
-        db.collection("alumno")
-                .orderBy("nombre")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LinearLayout statusContainerView = AlumnosActivity.this.findViewById(R.id.statusContainer);
-                        if (task.isSuccessful()) {
-                            int resultados = 0;
-                            statusContainerView.setVisibility(View.GONE);
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                try {
-                                    resultados++;
-                                    Map<String, Object> campos = document.getData();
-                                    String nombre = String.valueOf(campos.get("nombre"));
-                                    String apellido = String.valueOf(campos.get("apellido"));
-                                    // TODO: TOMAR DATOS DE CURSO DE LA DB
-                                    String curso = "Cursando: 1° Año";
-                                    Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
-                                    String imagenURL = (String) campos.get("imagen_url");
-                                    // TODO: IMPROVE WAY OF CALCULATING AGE
-                                    int age;
-                                    if (fecNacimientoTimeStamp != null) {
-                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-                                        int d1 = Integer.parseInt(formatter.format(fecNacimientoTimeStamp.toDate()));
-                                        int d2 = Integer.parseInt(formatter.format(Calendar.getInstance().getTime()));
-                                        age = (d2 - d1) / 10000;
-                                    } else {
-                                        age = 0;
-                                    }
-                                    Alumno nuevoAlumno = new Alumno(document.getId(), nombre, apellido, curso, imagenURL, age);
-                                    crearFilaAlumno(nuevoAlumno);
-                                } catch (ClassCastException npe) {
-                                    Log.d(TAG, "Error al castear o obtener data de: "+document.getId());
-                                }
-                            }
-                            if(resultados > 0) {
-                                statusContainerView.setVisibility(View.GONE);
-                            } else {
-                                statusContainerView.setVisibility(View.VISIBLE);
-                                TextView statusText = statusContainerView.findViewById(R.id.statusText);
-                                statusText.setText(R.string.alumnos_activity_no_results);
-                                ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
-                                statusProgressBar.setVisibility(View.GONE);
-                            }
-                        } else {
-                            TextView statusTextView = statusContainerView.findViewById(R.id.statusText);
-                            statusTextView.setText(R.string.alumnos_load_fail_error_msg);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        TextView statusTextView = AlumnosActivity.this.findViewById(R.id.statusText);
-                        statusTextView.setText(R.string.alumnos_load_fail_error_msg);
-                    }
-                });
+        statusProgressBar.setVisibility(mostrando ? View.VISIBLE : View.GONE);
     }
 
-    private void buscarAlumnos(FirebaseFirestore db, String busqueda) {
-        LinearLayout statusContainerView = AlumnosActivity.this.findViewById(R.id.statusContainer);
-        statusContainerView.setVisibility(View.VISIBLE);
-        TextView statusText = statusContainerView.findViewById(R.id.statusText);
-        statusText.setText(R.string.alumnos_activity_buscando_msg);
-        statusText.setVisibility(View.VISIBLE);
-        ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
-        statusProgressBar.setVisibility(View.VISIBLE);
+    // Método para crear alumno
+    @NonNull
+    private Alumno crearAlumnoDesdeDocumento(@NonNull QueryDocumentSnapshot document) {
+        Map<String, Object> campos = document.getData();
+        String nombre = String.valueOf(campos.get("nombre"));
+        String apellido = String.valueOf(campos.get("apellido"));
+        String curso = "Cursando: 1° Año"; // TODO: TOMAR DATOS DE CURSO DE LA DB
+        Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
+        String imagenURL = (String) campos.get("imagen_url");
+
+        int age = calcularEdad(fecNacimientoTimeStamp);
+
+        return new Alumno(document.getId(), nombre, apellido, curso, imagenURL, age);
+    }
+
+    // Método para calcular edad
+    private int calcularEdad(Timestamp fecNacimientoTimeStamp) {
+        if (fecNacimientoTimeStamp != null) {
+            Date fecNacimiento = fecNacimientoTimeStamp.toDate();
+            Calendar birthCal = Calendar.getInstance();
+            Calendar now = Calendar.getInstance();
+            birthCal.setTime(fecNacimiento);
+            int age = now.get(Calendar.YEAR) - birthCal.get(Calendar.YEAR);
+            if (now.get(Calendar.DAY_OF_YEAR) < birthCal.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
+            return age;
+        } else {
+            return 0;
+        }
+    }
+
+    // Método para manejar la logica de carga de alumnos
+    private void manejarResultados(int resultados) {
+        if (resultados > 0) {
+            mostrarEstadoDeCarga(false, null);
+        } else {
+            mostrarEstadoDeCarga(true, getString(R.string.alumnos_activity_no_results));
+            ProgressBar statusProgressBar = findViewById(R.id.progressBar);
+            statusProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void mostrarMensajeDeError() {
+        mostrarEstadoDeCarga(true, getString(R.string.alumnos_load_fail_error_msg));
+    }
+
+    // Método para cargar alumnos
+    private void cargarAlumnos(@NonNull FirebaseFirestore db) {
+        mostrarEstadoDeCarga(true, getString(R.string.alumnos_loading_text));
+        LinearLayout alumnosContainer = findViewById(R.id.MainContentScrollLinearLayout);
+        alumnosContainer.removeAllViews();
+
         db.collection("alumno")
                 .orderBy("nombre")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        LinearLayout statusContainerView = AlumnosActivity.this.findViewById(R.id.statusContainer);
-                        if (task.isSuccessful()) {
-                            int resultados = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                try {
-                                    Map<String, Object> campos = document.getData();
-                                    String nombre = String.valueOf(campos.get("nombre"));
-                                    String apellido = String.valueOf(campos.get("apellido"));
-                                    String nombreCompleto = nombre + " " + apellido;
-                                    if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase())) continue;
-                                    resultados++;
-                                    String curso = "Cursando: 1° Año";
-                                    Timestamp fecNacimientoTimeStamp = (Timestamp) campos.get("fec_nacimiento");
-                                    String imagenURL = (String) campos.get("imagen_url");
-                                    // TODO: IMPROVE WAY OF CALCULATING AGE
-                                    int age;
-                                    if (fecNacimientoTimeStamp != null) {
-                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-                                        int d1 = Integer.parseInt(formatter.format(fecNacimientoTimeStamp.toDate()));
-                                        int d2 = Integer.parseInt(formatter.format(Calendar.getInstance().getTime()));
-                                        age = (d2 - d1) / 10000;
-                                    } else {
-                                        age = 0;
-                                    }
-                                    Alumno nuevoAlumno = new Alumno(document.getId(), nombre, apellido, curso, imagenURL, age);
-                                    crearFilaAlumno(nuevoAlumno);
-                                } catch (ClassCastException npe) {
-                                    Log.d(TAG, "Error al castear o obtener data de: "+document.getId());
-                                }
+                .addOnCompleteListener(task -> { // uso de lambda
+                    if (task.isSuccessful()) {
+                        int resultados = 0;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                resultados++;
+                                Alumno nuevoAlumno = crearAlumnoDesdeDocumento(document);
+                                crearFilaAlumno(nuevoAlumno);
+                            } catch (ClassCastException e) {
+                                Log.d(TAG, "Error al castear o obtener data de: " + document.getId());
                             }
-                            if(resultados > 0) {
-                                statusContainerView.setVisibility(View.GONE);
-                            } else {
-                                statusContainerView.setVisibility(View.VISIBLE);
-                                TextView statusText = statusContainerView.findViewById(R.id.statusText);
-                                statusText.setText(R.string.alumnos_activity_no_results);
-                                ProgressBar statusProgressBar = statusContainerView.findViewById(R.id.progressBar);
-                                statusProgressBar.setVisibility(View.GONE);
-                            }
-                        } else {
-                            TextView statusTextView = statusContainerView.findViewById(R.id.statusText);
-                            statusTextView.setText(R.string.alumnos_load_fail_error_msg);
                         }
+                        manejarResultados(resultados);
+                    } else {
+                        mostrarMensajeDeError();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        TextView statusTextView = AlumnosActivity.this.findViewById(R.id.statusText);
-                        statusTextView.setText(R.string.alumnos_load_fail_error_msg);
-                    }
-                });
+                })
+                .addOnFailureListener(e -> mostrarMensajeDeError());
     }
+
+    // Método para buscar alumnos
+    private void buscarAlumnos(@NonNull FirebaseFirestore db, String busqueda) {
+        mostrarEstadoDeCarga(true, getString(R.string.alumnos_activity_buscando_msg));
+
+        db.collection("alumno")
+                .orderBy("nombre")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int resultados = 0;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                Map<String, Object> campos = document.getData();
+                                String nombre = String.valueOf(campos.get("nombre"));
+                                String apellido = String.valueOf(campos.get("apellido"));
+                                String nombreCompleto = nombre + " " + apellido;
+                                if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase()))
+                                    continue;
+
+                                resultados++;
+                                Alumno nuevoAlumno = crearAlumnoDesdeDocumento(document);
+                                crearFilaAlumno(nuevoAlumno);
+                            } catch (ClassCastException e) {
+                                Log.d(TAG, "Error al castear o obtener data de: " + document.getId());
+                            }
+                        }
+                        manejarResultados(resultados);
+                    } else {
+                        mostrarMensajeDeError();
+                    }
+                })
+                .addOnFailureListener(e -> mostrarMensajeDeError());
+    }
+
 
     private void crearFilaAlumno(Alumno alumno) {
         // Creo fila de alumno
@@ -245,7 +231,7 @@ public class AlumnosActivity extends AppCompatActivity {
         // Creo imagen de la fila alumno
         ImageView alumnoPicture = new ImageView(this);
         LinearLayout.LayoutParams alumnoPictureParams = new LinearLayout.LayoutParams(200, 200);
-        alumnoPictureParams.setMargins(50,0,50,0);
+        alumnoPictureParams.setMargins(50, 0, 50, 0);
         alumnoPicture.setLayoutParams(alumnoPictureParams);
         if (alumno.getImageURL() != null) {
             try {
@@ -257,7 +243,7 @@ public class AlumnosActivity extends AppCompatActivity {
             alumnoPicture.setImageResource(R.drawable.logoescuela);
         }
         alumnoPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        
+
         // Agrego imagen a la fila
         alumnoRow.addView(alumnoPicture);
 

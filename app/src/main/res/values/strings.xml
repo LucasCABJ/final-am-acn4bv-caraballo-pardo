@@ -38,4 +38,5 @@
     <string name="cursos_nav_title">Cursos</string>
     <string name="loading_cursos_msg">Cargando cursos...</string>
     <string name="searching_cursos_msg">Buscando cursos...</string>
+    <string name="studentQueryHint">Buscar alumno...</string>
 </resources>
