@@ -1,9 +1,10 @@
 package com.davinci.sge_luju.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Alumno {
+public class Alumno implements Serializable {
   private String nombre;
   private String apellido;
   private Integer edad;

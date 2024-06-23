@@ -204,9 +204,7 @@ public class AlumnosActivity extends AppCompatActivity {
                                 String nombre = String.valueOf(campos.get("nombre"));
                                 String apellido = String.valueOf(campos.get("apellido"));
                                 String nombreCompleto = nombre + " " + apellido;
-                                if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase()))
-                                    continue;
-
+                                if (!nombreCompleto.toLowerCase().contains(busqueda.toLowerCase())) continue;
                                 resultados++;
                                 Alumno nuevoAlumno = crearAlumnoDesdeDocumento(document);
                                 crearFilaAlumno(nuevoAlumno);
@@ -305,7 +303,7 @@ public class AlumnosActivity extends AppCompatActivity {
         alumnoRow.setOnClickListener((v) -> {
             // Acciones al hacer clic en el alumno
             Intent intent = new Intent(this, DetalleAlumnoActivity.class);
-            intent.putExtra("alumno", alumno.getId());
+            intent.putExtra("alumno", alumno);
             startActivity(intent);
         });
 
