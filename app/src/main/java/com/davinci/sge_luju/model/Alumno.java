@@ -72,6 +72,6 @@ public class Alumno implements Serializable {
   }
 
   public String getFullName() {
-    return getNombre() + " " + getApellido();
+    return getNombre() + " " + getApellido().toUpperCase();
   }
 }

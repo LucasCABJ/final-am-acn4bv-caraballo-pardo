@@ -39,6 +39,55 @@
                 app:tint="@color/white" />
         </LinearLayout>
 
+        <!-- Contenedor de los estados -->
+        <!--<LinearLayout
+            android:id="@+id/statusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            &lt;!&ndash; Spinner &ndash;&gt;
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="50dp"
+                android:text="@string/loading_student_data"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            &lt;!&ndash; Progress Bar &ndash;&gt;
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:indeterminateTint="@color/progress_color"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp" />
+        </LinearLayout>-->
+
+        <!-- Scroll View del contenido principal -->
+        <ScrollView
+            android:id="@+id/MainContentScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:id="@+id/MainContentScrollLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp">
+
+            </LinearLayout>
+
+        </ScrollView>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
