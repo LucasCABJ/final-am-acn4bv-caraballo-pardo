@@ -24,13 +24,13 @@
                 android:layout_width="108dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="15dp"
-                android:foregroundTint="@color/white"
                 android:contentDescription="@string/nav_logo_description"
+                android:foregroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white"
                 app:srcCompat="@drawable/logoescuela"
+                app:tint="@color/white"
                 tools:srcCompat="@drawable/logoescuela" />
 
             <ImageView
@@ -39,11 +39,11 @@
                 android:layout_height="100dp"
                 android:contentDescription="@string/log_out_svc_icon_img_description"
                 android:padding="35dp"
-                app:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/logout" />
+                app:srcCompat="@drawable/logout"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
