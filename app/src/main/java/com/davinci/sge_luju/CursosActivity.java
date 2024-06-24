@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.davinci.sge_luju.model.Alumno;
+import com.davinci.sge_luju.utils.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -79,18 +80,15 @@ public class CursosActivity extends AppCompatActivity {
         });
 
         //  CHEQUEAR CONNECTIVITY
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (NetworkUtil.isNetworkAvailable(this)) {
             Log.d(TAG, "Conectividad funcionando correctamente");
             // Conexion a DB FIREBASE
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             cargarAlumnos(db);
-
         } else {
             Log.d(TAG, "No hay conectividad");
         }
+
     }
 
     private void cargarAlumnos(FirebaseFirestore db) {
