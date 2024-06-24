@@ -2,6 +2,8 @@ package com.davinci.sge_luju;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -75,49 +77,47 @@ public class DetalleAlumnoActivity extends AppCompatActivity {
 
         cargarImagenAlumno(imageView, imageUrl);
 
-        // Crear y añadir los TextView
-        // Nombre
-        addTextViewToLayout(mainContentLayout, alumno.getNombre());
-        // Apellido
-        addTextViewToLayout(mainContentLayout, alumno.getApellido());
-        // Curso
-        addTextViewToLayout(mainContentLayout, alumno.getCurso());
-        // Edad
-        addTextViewToLayout(mainContentLayout, getString(R.string.edad_alumno, alumno.getEdad()));
-
+        // Crear y añadir los TextView en formato de formulario
+        addFormRowToLayout(mainContentLayout, "Nombre:", alumno.getNombre());
+        addFormRowToLayout(mainContentLayout, "Apellido:", alumno.getApellido());
+        addFormRowToLayout(mainContentLayout, "Curso:", alumno.getCurso());
+        addFormRowToLayout(mainContentLayout, "Edad:", getString(R.string.edad_alumno, alumno.getEdad()));
     }
 
-    /*private void cargarImagenAlumno(ImageView imageView, String imageUrl) {
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            try {
-                Glide.with(this).load(imageUrl).into(imageView);
-            } catch (Exception e) {
-                imageView.setImageResource(R.drawable.logoescuela); // Imagen predeterminada en caso de error
-            }
-        } else {
-            imageView.setImageResource(R.drawable.logoescuela); // Imagen predeterminada si no hay URL válida
-        }
-    }*/
+    // Método auxiliar para crear y añadir una fila del formulario
+    private void addFormRowToLayout(LinearLayout layout, String label, String value) {
+        LinearLayout rowLayout = new LinearLayout(this);
+        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+        rowLayout.setPadding(20, 10, 20, 10);
 
-    // Método auxiliar para crear y añadir TextView
-    private void addTextViewToLayout(LinearLayout layout, String text) {
-        TextView textView = new TextView(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        textView.setLayoutParams(params);
-        textView.setText(text);
-        textView.setTextSize(32); // Doble del tamaño por defecto (16sp)
-        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER); // Centrar horizontalmente
-        params.gravity = Gravity.CENTER_HORIZONTAL; // Centrar horizontalmente dentro del layout
-        layout.addView(textView);
+        // Crear TextView para la etiqueta
+        TextView labelView = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        labelView.setLayoutParams(labelParams);
+        labelView.setText(label);
+        labelView.setTextSize(16);
+        labelView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+        // Crear TextView para el valor
+        TextView valueView = new TextView(this);
+        LinearLayout.LayoutParams valueParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
+        valueView.setLayoutParams(valueParams);
+        valueView.setText(value);
+        valueView.setTextSize(22);
+//        valueView.setTypeface(null, Typeface.BOLD); // Cambiar peso de la fuente
+        valueView.setTextColor(Color.BLACK);
+        valueView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+        rowLayout.addView(labelView);
+        rowLayout.addView(valueView);
+        layout.addView(rowLayout);
     }
 
     private void cargarImagenAlumno(ImageView imageView, String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {
             try {
-                int borderColor = getResources().getColor(R.color.border_color); // Define el color del borde en tu archivo de recursos
-                int borderWidth = getResources().getDimensionPixelSize(R.dimen.border_width); // Define el ancho del borde en tu archivo de recursos
-
                 Glide.with(this)
                         .load(imageUrl)
                         .apply(RequestOptions.bitmapTransform(new CircleCrop())) // Para hacer la imagen circular
