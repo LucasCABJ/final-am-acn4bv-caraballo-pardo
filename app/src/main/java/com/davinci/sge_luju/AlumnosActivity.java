@@ -112,6 +112,23 @@ public class AlumnosActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //  CHEQUEAR CONNECTIVITY
+        if (NetworkUtil.isNetworkAvailable(this)) {
+            Log.d(TAG, "Conectividad funcionando correctamente");
+            // Conexion a DB FIREBASE
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            LinearLayout alumnosContainer = AlumnosActivity.this.findViewById(R.id.MainContentScrollLinearLayout);
+            alumnosContainer.removeAllViews();
+            cargarAlumnos(FirebaseFirestore.getInstance());
+        } else {
+            Log.d(TAG, "No hay conectividad");
+        }
+    }
+
     // Método para mostrar estado de carga
     private void mostrarEstadoDeCarga(boolean mostrando, String mensaje) {
         LinearLayout statusContainerView = findViewById(R.id.statusContainer);

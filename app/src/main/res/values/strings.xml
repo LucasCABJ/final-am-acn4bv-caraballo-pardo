@@ -34,6 +34,7 @@
     <string name="loading_personal_docente_msg">Cargando personal…</string>
     <string name="log_in_nav_title">Iniciar Sesión</string>
     <string name="alumnos_nav_title">Alumnos</string>
+    <string name="add_alumno_nav_title">Agregar Alumno</string>
     <string name="docentes_nav_title">Docentes</string>
     <string name="cursos_nav_title">Cursos</string>
     <string name="loading_cursos_msg">Cargando cursos…</string>
@@ -41,11 +42,12 @@
     <string name="studentQueryHint">Buscar alumno…</string>
     <string name="loadingStudentData">Cargando Datos del Alumno</string>
     <string name="loading_student_data">Cargando datos del alumno…</string>
-    <string name="add_student">Agregar alumno</string>
-    <string name="apellido">Apellido</string>
-    <string name="curso">Curso</string>
+    <string name="add_student">Crear estudiante</string>
+    <string name="apellido">Apellido *</string>
+    <string name="curso">Curso *</string>
     <string name="guardar">Guardar</string>
-    <string name="nombre">Nombre</string>
-    <string name="fecha_nacimiento">Fecha de Nacimiento</string>
+    <string name="nombre">Nombre *</string>
+    <string name="fecha_nacimiento">Fecha de Nacimiento *</string>
     <string name="cargar_imagen">Cargar Imagen</string>
+    <string name="add_alumno_url_imagen_hint">URL de imagen (opcional)</string>
 </resources>

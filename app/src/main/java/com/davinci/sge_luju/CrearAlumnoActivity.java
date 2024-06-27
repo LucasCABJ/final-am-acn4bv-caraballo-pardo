@@ -27,6 +27,7 @@ public class CrearAlumnoActivity extends AppCompatActivity {
     private EditText etApellido;
     private EditText etCurso;
     private EditText etFechaNacimiento;
+    private EditText etImagenURL;
     private Button btnGuardar;
 
     @Override
@@ -38,6 +39,7 @@ public class CrearAlumnoActivity extends AppCompatActivity {
         etApellido = findViewById(R.id.etApellido);
         etCurso = findViewById(R.id.etCurso);
         etFechaNacimiento = findViewById(R.id.etFechaNacimiento);
+        etImagenURL = findViewById(R.id.etImagenURL);
         btnGuardar = findViewById(R.id.btnGuardar);
 
         etFechaNacimiento.setOnClickListener(v -> showDatePickerDialog());
@@ -49,9 +51,10 @@ public class CrearAlumnoActivity extends AppCompatActivity {
                 String apellido = etApellido.getText().toString().trim();
                 String curso = etCurso.getText().toString().trim();
                 String fechaNacimiento = etFechaNacimiento.getText().toString().trim();
+                String imagenURL = etImagenURL.getText().toString().trim();
 
                 if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(apellido) || TextUtils.isEmpty(curso) || TextUtils.isEmpty(fechaNacimiento)) {
-                    Toast.makeText(CrearAlumnoActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CrearAlumnoActivity.this, "Complete todos los campos son obligatorios (*)", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -61,7 +64,7 @@ public class CrearAlumnoActivity extends AppCompatActivity {
                     return;
                 }
 
-                guardarAlumno(nombre, apellido, curso, fechaNacimientoDate);
+                guardarAlumno(nombre, apellido, curso, fechaNacimientoDate, imagenURL);
             }
         });
     }
@@ -76,7 +79,7 @@ public class CrearAlumnoActivity extends AppCompatActivity {
         }
     }
 
-    private void guardarAlumno(String nombre, String apellido, String curso, Date fechaNacimiento) {
+    private void guardarAlumno(String nombre, String apellido, String curso, Date fechaNacimiento, String imagenURL) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> alumno = new HashMap<>();
@@ -84,7 +87,7 @@ public class CrearAlumnoActivity extends AppCompatActivity {
         alumno.put("apellido", apellido);
         alumno.put("curso", curso);
         alumno.put("fec_nacimiento", new Timestamp(fechaNacimiento));
-        alumno.put("imagen_url", ""); // URL de imagen vacía por ahora
+        alumno.put("imagen_url", imagenURL); // URL de imagen vacía por ahora
 
         db.collection("alumno")
                 .add(alumno)
