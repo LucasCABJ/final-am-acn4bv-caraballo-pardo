@@ -36,6 +36,7 @@ import com.davinci.sge_luju.utils.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Firebase;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -99,6 +100,16 @@ public class AlumnosActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "No hay conectividad");
         }
+
+        // Configurar el FloatingActionButton
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AlumnosActivity.this, CrearAlumnoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     // Método para mostrar estado de carga

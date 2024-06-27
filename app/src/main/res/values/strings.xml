@@ -41,4 +41,11 @@
     <string name="studentQueryHint">Buscar alumno…</string>
     <string name="loadingStudentData">Cargando Datos del Alumno</string>
     <string name="loading_student_data">Cargando datos del alumno…</string>
+    <string name="add_student">Agregar alumno</string>
+    <string name="apellido">Apellido</string>
+    <string name="curso">Curso</string>
+    <string name="guardar">Guardar</string>
+    <string name="nombre">Nombre</string>
+    <string name="fecha_nacimiento">Fecha de Nacimiento</string>
+    <string name="cargar_imagen">Cargar Imagen</string>
 </resources>
