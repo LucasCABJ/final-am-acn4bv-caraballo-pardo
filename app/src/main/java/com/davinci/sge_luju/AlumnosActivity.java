@@ -91,7 +91,7 @@ public class AlumnosActivity extends AppCompatActivity {
             }
         });
 
-        //  CHEQUEAR CONNECTIVITY
+        /*//  CHEQUEAR CONNECTIVITY
         if (NetworkUtil.isNetworkAvailable(this)) {
             Log.d(TAG, "Conectividad funcionando correctamente");
             // Conexion a DB FIREBASE
@@ -99,7 +99,7 @@ public class AlumnosActivity extends AppCompatActivity {
             cargarAlumnos(db);
         } else {
             Log.d(TAG, "No hay conectividad");
-        }
+        }*/
 
         // Configurar el FloatingActionButton
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -194,7 +194,7 @@ public class AlumnosActivity extends AppCompatActivity {
         alumnosContainer.removeAllViews();
 
         db.collection("alumno")
-                .orderBy("nombre")
+                .orderBy("apellido")
                 .get()
                 .addOnCompleteListener(task -> { // uso de lambda
                     if (task.isSuccessful()) {
