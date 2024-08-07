@@ -1,29 +1,20 @@
 package com.davinci.sge_luju;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.davinci.sge_luju.ui.login.LoginActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
             Button mainLogInBtn = this.findViewById(R.id.mainLogInBtn);
             mainLogInBtn.setOnClickListener((v) -> {
                 Intent nextView = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(nextView);
+            });
+            Button registerBtn = this.findViewById(R.id.RegisterBtn);
+            registerBtn.setOnClickListener((v) -> {
+                Intent nextView = new Intent(getApplicationContext(), RegistroActivity.class);
                 startActivity(nextView);
             });
         }

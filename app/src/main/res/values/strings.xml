@@ -50,4 +50,13 @@
     <string name="fecha_nacimiento">Fecha de Nacimiento *</string>
     <string name="cargar_imagen">Cargar Imagen</string>
     <string name="add_alumno_url_imagen_hint">URL de imagen (opcional)</string>
+    <string name="main_no_user_register_btn_text">Registrarse</string>
+    <string name="register_nav_title">Registro</string>
+    <string name="prompt_name">Nombre</string>
+    <string name="prompt_last_name">Apellido</string>
+    <string name="prompt_age">18</string>
+    <string name="prompt_confirmation_code">Código de Registro</string>
+    <string name="register_btn">Enviar</string>
+    <string name="prompt_confirm_password">Confirmar Password</string>
+    <string name="register_back_to_main_btn_text">Cancelar</string>
 </resources>
