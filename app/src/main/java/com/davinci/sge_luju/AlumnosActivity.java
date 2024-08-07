@@ -91,16 +91,6 @@ public class AlumnosActivity extends AppCompatActivity {
             }
         });
 
-        /*//  CHEQUEAR CONNECTIVITY
-        if (NetworkUtil.isNetworkAvailable(this)) {
-            Log.d(TAG, "Conectividad funcionando correctamente");
-            // Conexion a DB FIREBASE
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            cargarAlumnos(db);
-        } else {
-            Log.d(TAG, "No hay conectividad");
-        }*/
-
         // Configurar el FloatingActionButton
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
