@@ -106,16 +106,26 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private boolean isFieldsFilled() {
-        if (TextUtils.isEmpty(etFirstName.getText().toString()) ||
-                TextUtils.isEmpty(etLastName.getText().toString()) ||
-                TextUtils.isEmpty(etAge.getText().toString()) ||
-                TextUtils.isEmpty(etEmail.getText().toString()) ||
-                TextUtils.isEmpty(etPassword.getText().toString()) ||
-                TextUtils.isEmpty(etConfirmPassword.getText().toString()) ||
-                TextUtils.isEmpty(etConfirmationCode.getText().toString())
-        ) {
+        boolean isAllFilled = true;
+
+        isAllFilled &= validateField(etFirstName, "Complete su nombre");
+        isAllFilled &= validateField(etLastName, "Complete su apellido");
+        isAllFilled &= validateField(etAge, "Complete su edad");
+        isAllFilled &= validateField(etEmail, "Complete su correo electrónico");
+        isAllFilled &= validateField(etPassword, "Complete su contraseña");
+        isAllFilled &= validateField(etConfirmPassword,  "Complete su contraseña");
+        isAllFilled &= validateField(etConfirmationCode,"Complete su código de confirmación");
+
+        if (!isAllFilled) {
             // Mostrar mensaje de error
-            showToast("Todos los campos son obligatorios");
+            showToast("Complete todos los campos");
+        }
+        return isAllFilled;
+    }
+
+    private boolean validateField(EditText editText, String message) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            editText.setError(message);
             return false;
         }
         return true;
