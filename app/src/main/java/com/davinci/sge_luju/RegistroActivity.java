@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +23,9 @@ import java.util.Map;
 public class RegistroActivity extends AppCompatActivity {
 
     private static final String CONFIRMATION_CODE = "1234";
+    private EditText etFirstName, etLastName, etAge, etEmail, etPassword, etConfirmPassword, etConfirmationCode;
+    private Button btnRegister, btnBackToMain;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,64 +40,85 @@ public class RegistroActivity extends AppCompatActivity {
         });
 
         // Obtengo las referencias a los EditTexts
-        EditText etFirstName = findViewById(R.id.firstName);
-        EditText etLastName = findViewById(R.id.lastName);
-        EditText etAge = findViewById(R.id.age);
-        EditText etEmail = findViewById(R.id.email);
-        EditText etPassword = findViewById(R.id.password);
-        EditText etConfirmPassword = findViewById(R.id.confirmPassword);
-        EditText etConfirmationCode = findViewById(R.id.confirmationCode);
-        Button btnRegister = findViewById(R.id.registerBtn);
-        Button btnBackToMain = findViewById(R.id.backToMainBtn);
+        etFirstName = findViewById(R.id.firstName);
+        etLastName = findViewById(R.id.lastName);
+        etAge = findViewById(R.id.age);
+        etEmail = findViewById(R.id.email);
+        etPassword = findViewById(R.id.password);
+        etConfirmPassword = findViewById(R.id.confirmPassword);
+        etConfirmationCode = findViewById(R.id.confirmationCode);
+        btnRegister = findViewById(R.id.registerBtn);
+        btnBackToMain = findViewById(R.id.backToMainBtn);
+        progressBar = findViewById(R.id.progressBar);
 
         // Configuro el botón de registro
         btnRegister.setOnClickListener(v -> {
-
-            String inputCode = etConfirmationCode.getText().toString();
-
-            // Validar que los campos estén completos
-            if (TextUtils.isEmpty(etFirstName.getText().toString()) ||
-                    TextUtils.isEmpty(etLastName.getText().toString()) ||
-                    TextUtils.isEmpty(etAge.getText().toString()) ||
-                    TextUtils.isEmpty(etEmail.getText().toString()) ||
-                    TextUtils.isEmpty(etPassword.getText().toString()) ||
-                    TextUtils.isEmpty(etConfirmPassword.getText().toString()) ||
-                    TextUtils.isEmpty(etConfirmationCode.getText().toString())
-            ) {
-                // Mostrar mensaje de error
-                Toast.makeText(RegistroActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
-            } else {
-                // Validar que las contraseñas coincidan
-                if (!etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) {
-                    // Mostrar mensaje de error
-                    Toast.makeText(RegistroActivity.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Validar que el código de confirmación sea correcto
-                    if (!inputCode.equals(CONFIRMATION_CODE)) {
-                        // Mostrar mensaje de error
-                        Toast.makeText(RegistroActivity.this, "Código de confirmación incorrecto", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Guardar usuario en Firebase Firestore
-                        crearUsuario(etFirstName.getText().toString(), etLastName.getText().toString(), etAge.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString());
-
-                        // Mostrar mensaje de éxito
-                        Toast.makeText(RegistroActivity.this, "Usuario " + etFirstName.getText().toString() + " " + etLastName.getText().toString() + " registrado exitosamente", Toast.LENGTH_SHORT).show();
-                        // Redirigirr a la página de inicio
-                        Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish(); // Finalizar la actividad actual
-                    }
-                }
-            }
+            handleRegistration();
         });
+
 
         // Configuro el botón de volver a la página de inicio
         btnBackToMain.setOnClickListener(v -> {
             // Redirigir a la página de inicio
-            Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish(); // Finalizar la actividad actual
+            navigateToMain();
         });
+    }
+
+    private void handleRegistration() {
+        if (!isFieldsFilled()) return;
+        if (!isPasswordsMatch()) return;
+        if (!isConfirmationCodeCorrect()) return;
+
+        // Deshabilitar el botón de registro y mostrar el ProgressBar
+        btnRegister.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Crear usuario en Firebase Firestore
+        crearUsuario(
+                etFirstName.getText().toString().trim(),
+                etLastName.getText().toString().trim(),
+                etAge.getText().toString().trim(),
+                etEmail.getText().toString().trim(),
+                etPassword.getText().toString().trim()
+        );
+    }
+
+    private boolean isConfirmationCodeCorrect() {
+        if (!etConfirmationCode.getText().toString().equals(CONFIRMATION_CODE)) {
+            // Mostrar mensaje de error
+            showToast("Código de confirmación incorrecto");
+            return false;
+        }
+        return true;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(RegistroActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isPasswordsMatch() {
+        if (!etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) {
+            // Mostrar mensaje de error
+            showToast("Las contraseñas no coinciden");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isFieldsFilled() {
+        if (TextUtils.isEmpty(etFirstName.getText().toString()) ||
+                TextUtils.isEmpty(etLastName.getText().toString()) ||
+                TextUtils.isEmpty(etAge.getText().toString()) ||
+                TextUtils.isEmpty(etEmail.getText().toString()) ||
+                TextUtils.isEmpty(etPassword.getText().toString()) ||
+                TextUtils.isEmpty(etConfirmPassword.getText().toString()) ||
+                TextUtils.isEmpty(etConfirmationCode.getText().toString())
+        ) {
+            // Mostrar mensaje de error
+            showToast("Todos los campos son obligatorios");
+            return false;
+        }
+        return true;
     }
 
     private void crearUsuario(String name, String lastName, String age, String email, String password) {
@@ -113,10 +138,12 @@ public class RegistroActivity extends AppCompatActivity {
 
     private void handleFailure() {
         Toast.makeText(RegistroActivity.this, "Error al crear el usuario", Toast.LENGTH_SHORT).show();
+        btnRegister.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void handleSuccess() {
-        Toast.makeText(RegistroActivity.this, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
+        showToast("Usuario creado exitosamente");
         navigateToMain();
     }
 
