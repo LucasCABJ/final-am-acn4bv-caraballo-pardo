@@ -13,8 +13,8 @@
     <string name="alumnodepruebaBtn_text">Crear alumno de prueba</string>
     <string name="edad_alumno">Edad: %1$d</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Contraseña</string>
+    <string name="prompt_email">Email *</string>
+    <string name="prompt_password">Contraseña *</string>
     <string name="action_sign_in">Iniciar Sesión</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
@@ -52,11 +52,10 @@
     <string name="add_alumno_url_imagen_hint">URL de imagen (opcional)</string>
     <string name="main_no_user_register_btn_text">Registrarse</string>
     <string name="register_nav_title">Registro</string>
-    <string name="prompt_name">Nombre</string>
-    <string name="prompt_last_name">Apellido</string>
-    <string name="prompt_age">18</string>
-    <string name="prompt_confirmation_code">Código de Registro</string>
+    <string name="prompt_name">Nombre *</string>
+    <string name="prompt_last_name">Apellido *</string>
+    <string name="prompt_confirmation_code">Código de Registro *</string>
     <string name="register_btn">Enviar</string>
-    <string name="prompt_confirm_password">Confirmar Password</string>
+    <string name="prompt_confirm_password">Confirmar Password *</string>
     <string name="register_back_to_main_btn_text">Cancelar</string>
 </resources>
